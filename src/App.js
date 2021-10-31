@@ -6,30 +6,39 @@ import ContactItem from './components/ContactItem'
 
 import './App.css'
 
-const initialContactsList = [
-  {
-    id: uuidv4(),
-    name: 'Ram',
-    mobileNo: 9999988888,
-    isFavorite: false,
-  },
-  {
-    id: uuidv4(),
-    name: 'Pavan',
-    mobileNo: 8888866666,
-    isFavorite: false,
-  },
-  {
-    id: uuidv4(),
-    name: 'Nikhil',
-    mobileNo: 9999955555,
-    isFavorite: false,
-  },
-]
+const getFromStorage = () => {
+  const parsedList = JSON.parse(localStorage.getItem('list'))
+  if (parsedList === null) {
+    return []
+  }
 
+  return parsedList
+}
+
+console.log('iam started')
+// const initialContactsList = [
+//   {
+//     id: uuidv4(),
+//     name: 'Ram',
+//     mobileNo: 9999988888,
+//     isFavorite: false,
+//   },
+//   {
+//     id: uuidv4(),
+//     name: 'Pavan',
+//     mobileNo: 8888866666,
+//     isFavorite: false,
+//   },
+//   {
+//     id: uuidv4(),
+//     name: 'Nikhil',
+//     mobileNo: 9999955555,
+//     isFavorite: false,
+//   },
+// ]
 class App extends Component {
   state = {
-    contactsList: initialContactsList,
+    contactsList: getFromStorage(),
     name: '',
     mobileNo: '',
   }
@@ -51,13 +60,15 @@ class App extends Component {
     event.preventDefault()
     const {name, mobileNo} = this.state
     const newContact = {
-      id: uuidv4,
+      id: uuidv4(),
       name,
       mobileNo,
       isFavorite: false,
     }
     this.setState(prevSta => ({
       contactsList: [...prevSta.contactsList, newContact],
+
+      //  clearing the input form after accessing the values
       name: '',
       mobileNo: '',
     }))
@@ -65,14 +76,21 @@ class App extends Component {
 
   onChangeMobileNo = event => {
     this.setState({mobileNo: event.target.value})
+    console.log(event.target.value)
   }
 
   onChangeName = event => {
     this.setState({name: event.target.value})
+    console.log(event.target.value)
   }
 
   render() {
-    const {name, mobileNo, contactsList} = this.state
+    const {contactsList} = this.state
+    localStorage.setItem('list', JSON.stringify(contactsList))
+    getFromStorage()
+    console.log('iam inside the render')
+
+    const {name, mobileNo} = this.state
     return (
       <div className="app-container">
         <div className="responsive-container">
